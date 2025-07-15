@@ -35,6 +35,16 @@ class ConcurrentBloc extends BaseBridgeBloc {
       ),
     );
 
-    await animateBall(event.ballId, Colors.green);
+    // Use try-catch to handle potential close errors
+    try {
+      if (!isClosed) {
+        await animateBall(event.ballId, Colors.green);
+      }
+    } catch (e) {
+      // Ignore errors if bloc is closed during animation
+      if (!e.toString().contains('Cannot add new events after calling close')) {
+        rethrow;
+      }
+    }
   }
 }
